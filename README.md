@@ -1,8 +1,8 @@
 Sistema de análisis de evaluaciones emocionales a partir de registros afectivos
 Documentación final del proyecto integrador
-Integrantes: [Nombre del integrante 1], [Nombre del integrante 2]
-Curso: [Completar curso]
-Docente: [Completar docente]
+Integrantes: Rodrigo Ilundain, Franklin Barreto
+Curso: Insight AI
+Docente: Juan Francisco Rodríguez, Mario Ottati, Pablo Casanova, Claudia
 Fecha: [Completar fecha de entrega]
 
 
@@ -74,7 +74,7 @@ En este proyecto los registros no se leen directamente desde la base de datos, s
 Además, incluye restricciones para asegurar que los valores de valencia y activación siempre se encuentren dentro del rango permitido, que va desde -1 hasta 1.
 
 3.2 Archivo CSV
-El segundo origen de datos del proyecto es el archivo registros afectivos.csv, que contiene 6.054 registros.
+El segundo origen de datos del proyecto es el archivo registros_afectivos.csv, que contiene 6.054 registros.
 Cada fila representa un evento emocional y guarda la siguiente información:
 id del registro
 usuario que lo generó
