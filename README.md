@@ -3,8 +3,7 @@ Documentación final del proyecto integrador
 Integrantes: Rodrigo Ilundain, Franklin Barreto
 Curso: Insight AI
 Docente: Juan Francisco Rodríguez, Mario Ottati, Pablo Casanova, Claudia
-Fecha: [Completar fecha de entrega]
-
+Fecha: 
 
 
 
