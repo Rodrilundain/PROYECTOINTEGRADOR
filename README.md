@@ -186,7 +186,6 @@ visualizaciones.py
 El último módulo se encarga de generar todos los gráficos utilizados en el proyecto.
 A partir del archivo final crea gráficos de barras, dispersión, series temporales y rankings que permiten visualizar la información de una manera mucho más clara y facilitar su interpretación.
 
-
 Organización de la ejecución
 Además de separar la lógica en módulos, también se decidió dividir la ejecución del proyecto en diferentes scripts.
 Cada uno ejecuta una etapa específica del proceso, lo que permite probar cada paso por separado sin tener que correr todo el programa nuevamente.
