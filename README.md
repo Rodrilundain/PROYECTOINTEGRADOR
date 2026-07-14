@@ -1,8 +1,7 @@
-
 Sistema de análisis de evaluaciones emocionales a partir de registros afectivos
-●	Sistema de análisis de evaluaciones emocionales a partir de registros afectivos Documentación final del proyecto integrador
-●	 Integrantes: Rodrigo Ilundain, Franklin Barreto Curso: Insight AI
-●	 Docente: Juan Francisco Rodríguez, Mario Ottati, Pablo Casanova, Claudia 
+Sistema de análisis de evaluaciones emocionales a partir de registros afectivos Documentación final del proyecto integrador
+ Integrantes: Rodrigo Ilundain, Franklin Barreto Curso: Insight AI
+ Docente: Juan Francisco Rodríguez, Mario Ottati, Pablo Casanova, Claudia 
 
 
 2. Descripción general del problema
@@ -21,81 +20,82 @@ La base está formada por cuatro tablas principales, aunque durante el procesami
 Tabla usuarios
 En esta tabla se almacena la información de cada estudiante.
 Los datos principales son:
-●	id_usuario
-●	nombre
-●	edad
-●	género
+id_usuario
+nombre
+edad
+género
 Cada usuario tiene un identificador único que permite relacionarlo con los registros afectivos. Gracias a esta tabla después podemos saber quién generó cada registro y realizar análisis individuales, como descubrir cuál es la emoción predominante de cada estudiante o qué tan variable fue su comportamiento emocional durante el curso.
 La tabla cuenta con 30 usuarios cargados.
 
 
 Tabla contextos
 Esta tabla describe el lugar o la actividad donde ocurrió cada registro afectivo.Entre sus campos principales se encuentran:
-●	id_contexto
-●	origen
-●	actividad
-●	ubicación
-●	descripción
+id_contexto
+origen
+actividad
+ubicación
+descripción
 Su función es agregar contexto a cada registro. No es lo mismo una emoción registrada durante un examen que durante un trabajo en equipo o una práctica de laboratorio.
 Actualmente la base contiene 45 contextos diferentes, aunque para este proyecto solamente se utilizaron 12 de ellos.
 
 Tabla etiquetas emocionales
 Esta tabla es una de las más importantes del sistema porque define cómo interpretar las emociones.
 Cada registro contiene:
-●	id_etiqueta
-●	nombre de la emoción
-●	rango mínimo y máximo de valencia
-●	rango mínimo y máximo de activación
-●	cuadrante emocional
+id_etiqueta
+nombre de la emoción
+rango mínimo y máximo de valencia
+rango mínimo y máximo de activación
+cuadrante emocional
 A partir de estos rangos el programa puede determinar automáticamente si un registro corresponde a emociones como Entusiasta, Calmo, Frustrado, Triste, Alerta, Neutro, Tenso o Cansado.
 En total se utilizan 8 etiquetas emocionales.
 Tabla registros afectivos
 Esta tabla representa la estructura de los registros afectivos dentro de la base de datos.
 Contiene información como:
-●	id_registro
-●	id_usuario
-●	id_contexto
-●	fecha y hora
-●	valencia
-●	activación
-●	comentario
+id_registro
+id_usuario
+id_contexto
+fecha y hora
+valencia
+activación
+comentario
 En este proyecto los registros no se leen directamente desde la base de datos, sino desde un archivo CSV. Sin embargo, esta tabla sirve como modelo para mantener la estructura de la información y validar que los datos respeten las relaciones entre usuarios y contextos.
 Además, incluye restricciones para asegurar que los valores de valencia y activación siempre se encuentren dentro del rango permitido, que va desde -1 hasta 1.
 
 3.2 Archivo CSV
 El segundo origen de datos del proyecto es el archivo registros afectivos.csv, que contiene 6.054 registros.
 Cada fila representa un evento emocional y guarda la siguiente información:
-●	id del registro
-●	usuario que lo generó
-●	contexto donde ocurrió
-●	fecha y hora
-●	valor de valencia
-●	valor de activación
-●	comentario opcional
+id del registro
+usuario que lo generó
+contexto donde ocurrió
+fecha y hora
+valor de valencia
+valor de activación
+comentario opcional
 Este archivo es el punto de partida del procesamiento.
 Sin embargo, fue preparado con distintos errores de forma intencional para poner a prueba el sistema de validación.
 Durante la carga pueden aparecer situaciones como:
-●	valores escritos como texto donde debería haber números;
-●	valores fuera del rango permitido;
-●	fechas inválidas o vacías;
-●	registros duplicados;
-●	comentarios con problemas de codificación;
-●	información incompleta.
+valores escritos como texto donde debería haber números;
+valores fuera del rango permitido;
+fechas inválidas o vacías;
+registros duplicados;
+comentarios con problemas de codificación;
+información incompleta.
 Antes de comenzar cualquier análisis, el programa revisa todos esos datos, identifica los errores y separa los registros válidos de los inválidos para trabajar únicamente con información confiable.
+
 
 4. Modelo de datos
 Modelo Entidad-Relación (MER)
 Antes de empezar a programar fue necesario definir cómo se iba a organizar toda la información. Para eso se diseñó un Modelo Entidad-Relación (MER), que muestra cómo se conectan los datos entre sí.
 En este proyecto se trabajó con cuatro entidades principales:
-●	Usuarios: almacena la información de cada estudiante.
-●	Registros afectivos: guarda cada emoción registrada durante una actividad.
-●	Contextos: describe en qué situación o actividad ocurrió cada registro.
-●	Etiquetas emocionales: contiene las reglas que utiliza el sistema para interpretar cada emoción.
+Usuarios: almacena la información de cada estudiante.
+Registros afectivos: guarda cada emoción registrada durante una actividad.
+Contextos: describe en qué situación o actividad ocurrió cada registro.
+Etiquetas emocionales: contiene las reglas que utiliza el sistema para interpretar cada emoción.
 La relación principal del modelo es sencilla:
-●	Un usuario puede generar muchos registros afectivos.
-●	Cada registro afectivo pertenece únicamente a un usuario.
-●	Un contexto puede aparecer en muchos registros.
-●	Cada registro afectivo ocurre en un solo contexto.
+Un usuario puede generar muchos registros afectivos.
+Cada registro afectivo pertenece únicamente a un usuario.
+Un contexto puede aparecer en muchos registros.
+Cada registro afectivo ocurre en un solo contexto.
 Las etiquetas emocionales funcionan de una forma un poco diferente. No están relacionadas mediante una clave foránea, sino que el programa las utiliza durante el procesamiento para comparar los valores de valencia y activación de cada registro y determinar qué emoción le corresponde.
 
 Pasaje del MER a las tablas
@@ -158,12 +158,12 @@ El resultado es el archivo final, donde cada registro ya contiene toda la inform
 analisis_evaluaciones.py
 Con el archivo final ya generado, este módulo realiza los distintos análisis del proyecto.
 Entre otras cosas permite identificar:
-●	la emoción predominante de cada usuario;
-●	la emoción predominante en cada contexto;
-●	los usuarios con mayor variabilidad emocional;
-●	los contextos con emociones más negativas;
-●	los promedios por etiqueta emocional;
-●	la distribución general de todas las emociones registradas.
+la emoción predominante de cada usuario;
+la emoción predominante en cada contexto;
+los usuarios con mayor variabilidad emocional;
+los contextos con emociones más negativas;
+los promedios por etiqueta emocional;
+la distribución general de todas las emociones registradas.
 Toda esta información sirve para entender mejor el comportamiento de los datos sin tener que revisar miles de registros manualmente.
 
 visualizaciones.py
@@ -175,11 +175,11 @@ Organización de la ejecución
 Además de separar la lógica en módulos, también se decidió dividir la ejecución del proyecto en diferentes scripts.
 Cada uno ejecuta una etapa específica del proceso, lo que permite probar cada paso por separado sin tener que correr todo el programa nuevamente.
 Los scripts principales son:
-●	main_sanitacion.py: carga los datos, realiza la validación y genera los archivos con registros válidos e inválidos.
-●	main_procesamiento_emocional.py: toma los registros válidos y calcula la evaluación emocional de cada uno.
-●	main_gen_extension_evaluaciones_paso3.py: agrega la información de usuarios y contextos para generar el archivo final del proyecto.
-●	main_analisis_evaluaciones_paso4.py: ejecuta todos los análisis estadísticos definidos para el proyecto.
-●	main_visualizaciones_paso5.py: genera los gráficos finales a partir de la información procesada.
+main_sanitacion.py: carga los datos, realiza la validación y genera los archivos con registros válidos e inválidos.
+main_procesamiento_emocional.py: toma los registros válidos y calcula la evaluación emocional de cada uno.
+main_gen_extension_evaluaciones_paso3.py: agrega la información de usuarios y contextos para generar el archivo final del proyecto.
+main_analisis_evaluaciones_paso4.py: ejecuta todos los análisis estadísticos definidos para el proyecto.
+main_visualizaciones_paso5.py: genera los gráficos finales a partir de la información procesada.
 
 Flujo general del proyecto
 En términos simples, el funcionamiento del sistema sigue siempre el mismo recorrido.
@@ -195,40 +195,53 @@ Para realizar esta tarea se desarrolló el módulo sanitacion.py, cuya función 
 Durante esta validación se controlan distintos aspectos de la información.
 Validaciones realizadas
 El sistema verifica que:
-●	Los campos de valencia, activación y fecha no estén vacíos.
-●	Los valores de valencia y activación sean realmente números.
-●	Esos valores se encuentren dentro del rango permitido, que va desde -1 hasta 1.
-●	La fecha tenga un formato válido.
-●	El usuario exista en la base de datos.
-●	El contexto también exista en la base de datos.
-●	No haya registros duplicados.
-●	Los comentarios vacíos o con valores como "null", "none", "n/a" o "sin dato" se sustituyan automáticamente por "No informado", sin descartar el registro.
+Los campos de valencia, activación y fecha no estén vacíos.
+Los valores de valencia y activación sean realmente números.
+Esos valores se encuentren dentro del rango permitido, que va desde -1 hasta 1.
+La fecha tenga un formato válido.
+El usuario exista en la base de datos.
+El contexto también exista en la base de datos.
+No haya registros duplicados.
+Los comentarios vacíos o con valores como "null", "none", "n/a" o "sin dato" se sustituyan automáticamente por "No informado", sin descartar el registro.
 Cada una de estas verificaciones ayuda a garantizar que el sistema trabaje únicamente con información consistente.
-
-
-
 
 
 Resultados obtenidos
 Luego de ejecutar todas las validaciones sobre el archivo original, se obtuvieron los siguientes resultados:
-Resultado	Cantidad
-Registros procesados	6.054
-Registros válidos	5.894
-Registros inválidos	160
-Total de errores detectados	240
+Resultado
+Cantidad
+Registros procesados
+6.054
+Registros válidos
+5.894
+Registros inválidos
+160
+Total de errores detectados
+240
+
 Esto significa que aproximadamente el 97,4 % de los registros pudieron utilizarse para el análisis, mientras que solamente un 2,6 % fueron descartados por presentar algún tipo de inconveniente.
 
 Tipos de errores encontrados
 Los errores detectados durante la validación fueron los siguientes:
-Tipo de error	Cantidad
-Valencia no numérica	40
-Valencia fuera de rango	60
-Activación no numérica	40
-Activación fuera de rango	60
-Fecha inválida	20
-Usuario inexistente	0
-Contexto inexistente	0
-Registros duplicados	20
+Tipo de error
+Cantidad
+Valencia no numérica
+40
+Valencia fuera de rango
+60
+Activación no numérica
+40
+Activación fuera de rango
+60
+Fecha inválida
+20
+Usuario inexistente
+0
+Contexto inexistente
+0
+Registros duplicados
+20
+
 Estos resultados muestran que la mayoría de los problemas estuvieron relacionados con valores incorrectos en los campos de valencia y activación.
 Por otro lado, no se encontraron registros que hicieran referencia a usuarios o contextos inexistentes, lo que indica que esas relaciones estaban correctamente definidas.
 
@@ -255,18 +268,18 @@ El objetivo es identificar qué emoción representa cada registro y medir qué t
 ¿Qué es la valencia?
 La valencia indica si una emoción es más positiva o más negativa.
 Su valor puede ir desde -1 hasta 1.
-●	Valores cercanos a -1 representan emociones negativas.
-●	Valores cercanos a 1 representan emociones positivas.
-●	Valores cercanos a 0 indican una emoción neutral.
+Valores cercanos a -1 representan emociones negativas.
+Valores cercanos a 1 representan emociones positivas.
+Valores cercanos a 0 indican una emoción neutral.
 La valencia permite saber cómo se siente una persona, pero por sí sola no alcanza para interpretar completamente una emoción.
 
 
 ¿Qué es la activación?
 La activación representa el nivel de energía con el que se experimenta una emoción.
 También toma valores entre -1 y 1.
-●	Valores altos indican emociones con mayor energía o intensidad.
-●	Valores bajos representan estados más tranquilos o relajados.
-●	Valores cercanos a cero muestran un nivel intermedio de activación.
+Valores altos indican emociones con mayor energía o intensidad.
+Valores bajos representan estados más tranquilos o relajados.
+Valores cercanos a cero muestran un nivel intermedio de activación.
 Al combinar la activación con la valencia es posible diferenciar emociones que pueden parecer similares, pero que en realidad tienen comportamientos distintos.
 
 Cálculo de la intensidad emocional
@@ -285,11 +298,11 @@ Cuadrante emocional
 Una vez calculada la intensidad, el sistema determina en qué cuadrante emocional se encuentra cada registro.
 Para hacerlo combina los valores de valencia y activación.
 Según esos valores, el registro puede clasificarse como:
-●	Positiva - Alta
-●	Positiva - Baja
-●	Negativa - Alta
-●	Negativa - Baja
-●	Centro
+Positiva - Alta
+Positiva - Baja
+Negativa - Alta
+Negativa - Baja
+Centro
 El cuadrante Centro se utiliza para aquellos registros cuyos valores están muy cerca del punto neutro.
 De esta forma se evita clasificar como positiva o negativa una emoción que, en realidad, prácticamente no presenta una tendencia clara.
 
@@ -297,14 +310,14 @@ Asignación de la etiqueta emocional
 Con toda esa información disponible, el programa busca en la tabla etiquetas_emocionales cuál de los rangos coincide con los valores del registro.
 Cuando encuentra una coincidencia, asigna automáticamente la emoción correspondiente.
 Las etiquetas utilizadas en este proyecto son:
-●	Entusiasta
-●	Calmo
-●	Frustrado
-●	Triste
-●	Tenso
-●	Alerta
-●	Neutro
-●	Cansado
+Entusiasta
+Calmo
+Frustrado
+Triste
+Tenso
+Alerta
+Neutro
+Cansado
 Gracias a este proceso, el sistema transforma datos numéricos en información mucho más fácil de interpretar.
 En lugar de ver únicamente valores como 0,62 o -0,48, cualquier persona puede entender rápidamente si el registro representa una emoción positiva, negativa, intensa o neutral.
 
@@ -318,10 +331,10 @@ Esto también facilita el mantenimiento del sistema y permite adaptar las reglas
 
 Resultado del procesamiento
 Una vez finalizada esta etapa, cada registro ya cuenta con:
-●	la intensidad emocional;
-●	la intensidad normalizada;
-●	el cuadrante emocional;
-●	la etiqueta que mejor representa la emoción registrada.
+la intensidad emocional;
+la intensidad normalizada;
+el cuadrante emocional;
+la etiqueta que mejor representa la emoción registrada.
 Con esa información ya es posible continuar con la siguiente etapa del proyecto, donde se incorporan los datos del usuario y del contexto para generar el archivo final utilizado en los análisis y las visualizaciones.
 
 8. Archivo final generado
@@ -330,15 +343,15 @@ Este archivo reúne toda la información procesada en un solo lugar y contiene 5
 Cada fila incluye tanto los datos originales del archivo CSV como toda la información que fue agregando el sistema durante las distintas etapas del procesamiento.
 
 Entre los datos que contiene se encuentran:
-●	Información del usuario (nombre, edad y género).
-●	Información del contexto donde ocurrió el registro.
-●	Fecha y hora del evento.
-●	Valores de valencia y activación.
-●	Comentario asociado.
-●	Intensidad emocional.
-●	Intensidad normalizada.
-●	Cuadrante emocional.
-●	Etiqueta emocional asignada.
+Información del usuario (nombre, edad y género).
+Información del contexto donde ocurrió el registro.
+Fecha y hora del evento.
+Valores de valencia y activación.
+Comentario asociado.
+Intensidad emocional.
+Intensidad normalizada.
+Cuadrante emocional.
+Etiqueta emocional asignada.
 Este archivo es el resultado principal del proyecto y sirve como base para generar todos los análisis y gráficos posteriores.
 En lugar de tener la información distribuida entre varios archivos y tablas, todo queda integrado en un único archivo listo para ser analizado.
 9. Análisis realizados
@@ -375,26 +388,26 @@ Este análisis permitió obtener una visión general del comportamiento emociona
 ¿Qué nos permitieron descubrir estos análisis?
 Más allá de los números, estos análisis ayudaron a responder preguntas concretas sobre los datos.
 Por ejemplo:
-●	cuáles fueron las emociones más frecuentes;
-●	qué actividades generaron respuestas emocionales más intensas;
-●	qué estudiantes mostraron mayor variabilidad emocional;
-●	si existían contextos especialmente negativos;
-●	cómo se distribuyeron las emociones a lo largo de todo el proyecto.
+cuáles fueron las emociones más frecuentes;
+qué actividades generaron respuestas emocionales más intensas;
+qué estudiantes mostraron mayor variabilidad emocional;
+si existían contextos especialmente negativos;
+cómo se distribuyeron las emociones a lo largo de todo el proyecto.
 Gracias a esta información fue posible pasar de miles de registros individuales a una visión mucho más clara del comportamiento general de los estudiantes.
-●	
 
 
 10. Visualizaciones y resultados obtenidos
 Una vez finalizado el procesamiento y los análisis, el proyecto genera una serie de gráficos que ayudan a interpretar la información de una forma mucho más visual.
 En lugar de revisar miles de registros o tablas con números, estos gráficos permiten identificar rápidamente tendencias, comparar resultados y detectar posibles situaciones que merezcan un análisis más profundo.
 Entre las visualizaciones generadas se encuentran:
-●	Gráfico de dispersión: muestra cómo se distribuyen los registros según los valores de valencia y activación, permitiendo observar cómo se agrupan las distintas emociones.
-●	Distribución de emociones: presenta la cantidad de registros correspondientes a cada etiqueta emocional, facilitando una visión general del comportamiento del conjunto de datos.
-●	Promedios por etiqueta: compara los valores promedio de valencia, activación e intensidad para cada emoción.
-●	Serie temporal de intensidad: permite observar cómo fue cambiando la intensidad emocional a lo largo del tiempo.
-●	Ranking de contextos: muestra qué actividades generaron emociones más intensas y cuáles presentaron una menor valencia promedio.
-●	Ranking de usuarios: identifica qué estudiantes registraron una mayor variedad de emociones durante el período analizado.
+Gráfico de dispersión: muestra cómo se distribuyen los registros según los valores de valencia y activación, permitiendo observar cómo se agrupan las distintas emociones.
+Distribución de emociones: presenta la cantidad de registros correspondientes a cada etiqueta emocional, facilitando una visión general del comportamiento del conjunto de datos.
+Promedios por etiqueta: compara los valores promedio de valencia, activación e intensidad para cada emoción.
+Serie temporal de intensidad: permite observar cómo fue cambiando la intensidad emocional a lo largo del tiempo.
+Ranking de contextos: muestra qué actividades generaron emociones más intensas y cuáles presentaron una menor valencia promedio.
+Ranking de usuarios: identifica qué estudiantes registraron una mayor variedad de emociones durante el período analizado.
 Cada uno de estos gráficos complementa los análisis realizados anteriormente y facilita la interpretación de los resultados, especialmente para personas que no necesitan revisar el detalle técnico del procesamiento.
+
 
 11. Resultados principales
 Después de analizar toda la información procesada, se obtuvieron varias conclusiones importantes.
@@ -416,6 +429,7 @@ Por último, se eligió trabajar con la biblioteca pandas, ya que permite manipu
 Todas estas decisiones ayudaron a desarrollar un proyecto más ordenado, reutilizable y preparado para futuras mejoras.
 
 
+
 13. Limitaciones del sistema
 Como cualquier desarrollo, este proyecto también tiene algunas limitaciones que es importante tener presentes.
 La primera es que la clasificación de las emociones depende completamente de los rangos definidos en la base de datos. Si esos rangos no representan correctamente cada emoción, los resultados obtenidos también pueden verse afectados.
@@ -423,8 +437,6 @@ Otra limitación es que el sistema no interpreta el contenido de los comentarios
 Además, el programa asume que los valores de valencia y activación ya fueron obtenidos correctamente. Es decir, no analiza cómo se generaron esos datos ni puede comprobar si representan realmente la emoción de la persona.
 En cuanto a la validación de fechas, el sistema verifica que tengan un formato correcto, pero no determina si esa fecha tiene sentido dentro del contexto del proyecto. Por ejemplo, una fecha como 2099 tiene un formato válido y actualmente sería aceptada.
 Por último, el análisis realizado sirve como una herramienta de apoyo para la toma de decisiones, pero no reemplaza el criterio de una persona. Los resultados muestran tendencias y patrones, aunque siempre deben interpretarse considerando el contexto en el que fueron generados.
-
-
 
 14. Posibles mejoras
 Durante el desarrollo surgieron varias ideas que podrían implementarse en futuras versiones para ampliar las funcionalidades del sistema.
@@ -435,7 +447,6 @@ También sería interesante permitir que las etiquetas emocionales y sus rangos 
 Por último, podrían incorporarse nuevos gráficos, filtros por fecha, usuario o contexto, e incluso generar reportes automáticos que faciliten todavía más el análisis de la información.
 Todas estas mejoras permitirían que el sistema fuera más completo, más flexible y más fácil de utilizar.
 
-
 15. Conclusión
 Este proyecto nos permitió recorrer todas las etapas de un proceso de análisis de datos, desde la carga de la información hasta la generación de reportes y visualizaciones.
 Durante el desarrollo trabajamos con datos provenientes de distintas fuentes, realizamos procesos de validación y limpieza, procesamos la información emocional y finalmente obtuvimos análisis que facilitaron la interpretación de los resultados.
@@ -444,3 +455,4 @@ También quedó claro el valor de organizar el proyecto en módulos independient
 Más allá de cumplir con los objetivos planteados para el proyecto, este trabajo nos permitió aplicar en un caso práctico muchos de los conceptos vistos durante el curso, como bases de datos relacionales, lectura de archivos CSV, validación de datos, programación modular, procesamiento de información y generación de reportes.
 En lo personal, este proyecto también nos permitió entender que el verdadero valor de un sistema no está solamente en procesar datos, sino en transformarlos en información útil para que una persona pueda interpretarla y tomar mejores decisiones.
 Creemos que el resultado obtenido cumple con los objetivos propuestos y deja una base sólida sobre la cual se pueden seguir incorporando nuevas funcionalidades y mejoras en futuras versiones.
+
